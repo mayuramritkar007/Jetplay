@@ -1,0 +1,23 @@
+<h2 mat-dialog-title *ngIf="selectedObject" class="text-center text-info">Update {{selectedObject['title']|titlecase}}
+</h2>
+<mat-dialog-content *ngIf="selectedObject">
+    <form [formGroup]="updateValueForm" (ngSubmit)="onSubmit('update', updateValueForm.value)">
+        <mat-form-field>
+            <input matInput name="code" placeholder="Code" formControlName="code">
+        </mat-form-field><br>
+        <mat-form-field>
+            <input matInput name="current_value" placeholder="Current Value"
+                formControlName="current_value">{{selectedObject['value']}}
+        </mat-form-field><br>
+        <mat-form-field>
+            <input matInput (keyup)="changeFinalValue()" type="number" name="difference"
+                placeholder="Increment/Decrement" formControlName="difference">
+        </mat-form-field><br>
+        <mat-form-field>
+            <input matInput type="number" (keyup)="changeDifference()" name="final_value" placeholder="Final Value"
+                formControlName="final_value">
+        </mat-form-field><br>
+        <button mat-raised-button style="float: right" color="accent" type="submit">Save</button>
+        <button mat-raised-button style="float: left" color="warn" (click)="close()" type="button">Close</button>
+    </form>
+</mat-dialog-content>

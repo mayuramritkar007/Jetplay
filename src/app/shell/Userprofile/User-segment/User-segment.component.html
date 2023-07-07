@@ -1,0 +1,102 @@
+<mat-card class='search-card'>
+  <mat-card-content>
+    <div style="display:flex;flex-direction: row;flex-wrap: wrap;justify-content: space-around;">
+
+      <mat-card class="text-center box_content_color">Account Status
+        <mat-checkbox matSuffix (change)="OnChange($event)" value='locked' class="example-margin">Blocked
+        </mat-checkbox>
+        <mat-checkbox matSuffix (change)="OnChange($event)" value='unlocked' class="example-margin">Un-Blocked
+        </mat-checkbox>
+      </mat-card>
+
+      <mat-card class="text-center box_content_color">Platform
+        <mat-checkbox (change)="OnChange($event)" value='android' class="example-margin">Android</mat-checkbox>
+        <mat-checkbox (change)="OnChange($event)" value='ios' class="example-margin">IOS</mat-checkbox>
+      </mat-card>
+
+      <mat-card class="text-center box_content_color">Registration Type
+        <mat-checkbox (change)="OnChange($event)" value='facebook' class="example-margin">Facebook</mat-checkbox>
+        <mat-checkbox (change)="OnChange($event)" value='google' class="example-margin">Google</mat-checkbox>
+        <mat-checkbox (change)="OnChange($event)" value='guest' class="example-margin">Guest</mat-checkbox>
+      </mat-card>
+
+    </div>
+    <div style="display:flex;flex-direction: row;flex-wrap: wrap;justify-content: space-around;align-items: center;">
+
+      <mat-card class="col-md-10 text-center box_content_color" matTooltip="Fields name to create CSV File"
+        matTooltipPosition="below">Fields
+        <mat-checkbox (change)="OnFieldChange($event)" value='id' class="example-margin">Id</mat-checkbox>
+        <mat-checkbox (change)="OnFieldChange($event)" value='username' class="example-margin">Username</mat-checkbox>
+        <mat-checkbox (change)="OnFieldChange($event)" value='email' class="example-margin">Email</mat-checkbox>
+        <mat-checkbox (change)="OnFieldChange($event)" value='is_blocked' class="example-margin">Account Status
+        </mat-checkbox>
+        <mat-checkbox (change)="OnFieldChange($event)" value='is_online' class="example-margin">User Status
+        </mat-checkbox>
+      </mat-card>
+
+      <button class="me-3" color='accent' mat-raised-button type="button" (click)="filterUser()">Create</button>
+
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div class="mt-2">
+
+  <mat-table [dataSource]="userSegmentDataSource">
+    <ng-container matColumnDef="filename">
+      <mat-header-cell *matHeaderCellDef> File Name </mat-header-cell>
+      <mat-cell *matCellDef="let row" data-label="filename" name='File Name'>
+        {{row.result.filename ? row.result.filename : '-'}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="valid_till">
+      <mat-header-cell *matHeaderCellDef> Valid Till </mat-header-cell>
+      <mat-cell *matCellDef="let row" data-label="valid_till" name='Valid Till'>
+        {{row.valid_till | date:'short' : '-'}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <mat-header-cell class="pemAction" *matHeaderCellDef> Action </mat-header-cell>
+      <mat-cell class="pemAction" *matCellDef="let row" data-label="action" name='Action'>
+        <!-- {{ row.is_completed ? row.result.status ==='success' ? '' : row.result.status  :'In Process'}} -->
+        <mat-icon matTooltip="CSV File Creation Is In Progress" matTooltipPosition="above" *ngIf="!row.is_completed"
+          disabled>cloud_circle
+        </mat-icon>
+
+        <a *ngIf="row.is_completed && row.result.status ==='success'" [href]="row.result.url" download>
+          <mat-icon>
+            cloud_download
+          </mat-icon>
+        </a>
+        <mat-icon matTooltip="CSV File Creation Failed" matTooltipPosition="above"
+          *ngIf="row.is_completed && row.result.status ==='failed'" color="warn" style="cursor:not-allowed">
+          cloud_off
+        </mat-icon>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;">
+    </mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"
+    [length]="totalSize" [pageIndex]="currentPage" (page)="handlePage($event)">
+  </mat-paginator>
+
+</div>
+
+<div class="mat-progress-spinner mt-2" *ngIf="(totalSize === 0 && spinnerActive)">
+  <span>
+    <mat-progress-spinner style="margin:auto auto;z-index: 1;" mode="indeterminate" [diameter]="60">
+    </mat-progress-spinner>
+  </span>
+</div>
+<!-- <div *ngIf="totalSize === 0 && spinnerActive == false">
+  <span>
+    <div class="text-info text-center">
+      <h4><b>No Users Available</b></h4>
+    </div>
+  </span>
+</div> -->

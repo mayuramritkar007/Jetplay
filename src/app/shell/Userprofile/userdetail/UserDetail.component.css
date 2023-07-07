@@ -1,0 +1,65 @@
+.mat-tab-header {
+    float: left;
+}
+
+.break_word {
+    word-wrap: break-word !important;
+    /* white-space: unset !important; */
+    /* flex: 0 0 37% !important; */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.inline_block {
+    padding-left: 7px;
+    padding-right: 7px;
+    display: inline-block;
+}
+
+.mat-column-action {
+    flex: 0 0 20%;
+}
+
+.mat-column-expiration_time {
+    flex: 0 0 20%;
+}
+
+.mat-column-is_read {
+    flex: 0 0 10%;
+}
+
+.mat-column-is_claimed {
+    flex: 0 0 10%;
+}
+
+.mat-column-message_type {
+    flex: 0 0 10%;
+}
+
+.materialTab {
+    padding: 0px 12px;
+    min-width: 80px;
+}
+
+.materialTabCardHeader {
+    justify-content: center;
+    background-color: #00BAAF;
+    color: white
+}
+
+.matCardScoreWallet {
+    margin: 2%;
+    padding-right: 10px
+}
+
+.matIconScoreWallet {
+    float: right;
+    font-size: 15px;
+}

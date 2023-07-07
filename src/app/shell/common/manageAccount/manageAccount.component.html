@@ -1,0 +1,98 @@
+<!-- Mat Card -->
+<!-- <mat-card class="registerMatCard" flex="40"> -->
+<mat-card-subtitle class="text-center title" style="color:black;">Add New Member</mat-card-subtitle>
+<!--Card content-->
+<mat-card-content style="margin:0%;">
+  <!-- Form -->
+  <form [formGroup]="NewMemberForm">
+    <!-- Firstname and Lastname -->
+    <div class="md-form">
+      <mat-form-field class="col-md-6">
+        <mat-label>First Name</mat-label>
+        <input matInput placeholder="First Name" autocomplete="new-password" formControlName="first_name"
+          name="first_name" required maxlength="30">
+        <mat-error>First Name Required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-md-6">
+        <mat-label>Last Name</mat-label>
+        <input matInput placeholder="Last Name" autocomplete="new-password" formControlName="last_name" name="last_name"
+          required maxlength="30">
+        <mat-error>Last Name Required</mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Email -->
+    <div class="md-form">
+      <mat-form-field class="col-md-12">
+        <mat-label>Email Id</mat-label>
+        <input matInput placeholder="Enter your email" autocomplete="new-password" name="email" formControlName="email"
+          required>
+        <mat-error>Email Required</mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Company Name -->
+    <!-- <div class="md-form">
+          <mat-form-field class="col-md-12">
+            <mat-label>Company Name</mat-label>
+            <input matInput placeholder="Enter company name" autocomplete="new-password" name="company"
+              formControlName="company_name" maxlength="50">
+          </mat-form-field>
+        </div> -->
+    <!-- Password And Confirm Password -->
+    <div class="md-form">
+      <mat-form-field class="col-md-6">
+        <mat-label>Password</mat-label>
+        <input matInput placeholder="Password" autocomplete="new-password" [type]="hide ? 'text' : 'password'"
+          type="password" name="password" formControlName="password" required maxlength="30">
+        <mat-error>
+          <span *ngIf="NewMemberForm.controls.password.hasError('required')">Password is required</span>
+          <span *ngIf="NewMemberForm.controls.password.hasError('minlength')">Minimum length of password is 6
+            characters</span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-md-6">
+        <mat-label>Re-Enter Password</mat-label>
+        <input matInput placeholder="Confirm Password" [type]="hide ? 'text' : 'password'" type="password"
+          name="confirmPassword" formControlName="confirmPassword" required maxlength="30">
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility':'visibility_off' }}</mat-icon>
+        <mat-error>
+          <span *ngIf="NewMemberForm.controls.confirmPassword.hasError('required')">Confirm Password is
+            required</span>
+          <span *ngIf="NewMemberForm.controls.confirmPassword.hasError('mustMatch')">passwords must match.</span>
+        </mat-error>
+        <!-- <mat-hint *ngIf='registerForm.controls.confirmPassword.errors && registerForm.controls.confirmPassword.dirty'
+              class="alert-danger">passwords must match.</mat-hint> -->
+      </mat-form-field>
+    </div>
+    <!-- Mobile Number -->
+    <div class="md-form">
+      <mat-form-field class="col-md-12">
+        <mat-label>Contact Number</mat-label>
+        <input matInput type="number" maxlength="10" type="tel" (keypress)="CheckMobileLength($event)"
+          placeholder="Mobile Number" name="mobile_number" formControlName="mobile_number" required>
+        <!-- <mat-icon matSuffix>phone</mat-icon> -->
+        <mat-error>
+          <span *ngIf="NewMemberForm.controls.mobile_number.hasError('required')">Mobile number is required</span>
+          <!-- <span *ngIf="registerForm.controls.mobile_number.hasError('minlength')">Mobile</span> -->
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Checkbox of Terms And Condition -->
+
+  </form>
+</mat-card-content>
+<!-- Sign Up Button -->
+<!-- [disabled]="disabledAgreement"  -->
+<mat-card-actions class="text-center" style="margin:0%;">
+  <!-- <button mat-raised-button [hidden]="!disabledAgreement" [disabled]="disabledAgreement" (click)="onSubmit()"
+        type="submit">Sign Up</button>-->
+  <button mat-raised-button color="warn" (click)="cancel()" type="button">Cancel</button>
+  <button mat-raised-button [disabled]="!NewMemberForm.valid" style="background-color: #4780BE;color: cornsilk"
+    (click)="onSubmit()"
+    type="submit">Create</button>
+
+
+</mat-card-actions>
+<!-- Link of Sign In for Already exist Account -->
+<!-- </mat-card> -->

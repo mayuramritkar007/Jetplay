@@ -1,0 +1,111 @@
+<!-- <mat-card class="pngimg mat-elevation-z8">
+	<h5>Userprofile Table</h5>
+</mat-card> -->
+
+<mat-card style="background-color: whitesmoke;" class="mat-elevation-z8" >
+	<mat-card-header style="height:7vh">
+	</mat-card-header>
+	<mat-card-content>
+		<mat-form-field class="col-md-10 col-sm-8 col-7" appearance="outline">
+			<mat-label>Search</mat-label>
+			<input [(ngModel)]="Searching" (keydown.enter)="searchUser()" matInput placeholder="Search">
+        <mat-icon matSuffix (click)="searchUser()">search</mat-icon>
+		</mat-form-field>
+    
+    <mat-form-field class="col-md-2 col-sm-4 col-5" appearance="outline">
+      <mat-label>Filter Users</mat-label>
+      <mat-select [formControl]="searchControl" multiple (selectionChange)="OnChange($event)" (close)="filterUser()">
+        <mat-optgroup *ngFor="let group of searchGroups" [label]="group.name"
+                      [disabled]="group.disabled">
+          <mat-option *ngFor="let se of group.search" [value]="se.value">
+            {{se.viewValue}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+    <!-- {{searchControl.value|json}} -->
+    <div *ngIf="(totalSize !== 0 && !spinnerActive)">
+    <mat-table [dataSource]="userDataSource" >
+      <ng-container matColumnDef="action">
+        <mat-header-cell class="pemAction" *matHeaderCellDef> Action </mat-header-cell>
+        <mat-cell class="pemAction" *matCellDef="let row" data-label="action" name='Action'>
+          <mat-checkbox (change)="OnUserlistChange($event)" [value]="row.id"></mat-checkbox>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef> User Id </mat-header-cell>
+        <mat-cell *matCellDef="let row" data-label="id" name='Id' [routerLink]="['/userprofile/viewuser', row.id]">
+          {{row.id ? row.id : '-'}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="username">
+        <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+        <mat-cell *matCellDef="let row" data-label="username" name='Username'>
+          {{row.username ? (row.username |titlecase) : '-'}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+        <mat-cell *matCellDef="let row" data-label="email" name='Email'> {{row.email ? row.email : '-'}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="country">
+        <mat-header-cell *matHeaderCellDef> Country </mat-header-cell>
+        <mat-cell *matCellDef="let row" data-label="country" name='Country'> {{row.country ? row.country : '-'}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="is_online">
+        <mat-header-cell *matHeaderCellDef> User Status </mat-header-cell>
+        <mat-cell *matCellDef="let row" data-label="is_online" name='Is-Online'>
+          <button  mat-button [ngStyle]="{'color':'white','line-height':'inherit','background-color': row.is_online===true?'#5EB765':'gray'}">{{row.is_online===true?'Online':'Offline'}}</button>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="is_blocked">
+        <mat-header-cell *matHeaderCellDef> Account Status </mat-header-cell>
+        <mat-cell *matCellDef="let row" data-label="is_blocked" name='Is-Blocked'>
+          <!-- <div class="text-center me-2 d-flex align-items-center justify-content-center"> -->
+            <img [src]="row.is_blocked===true?'../../../../assets/img/icons/lock.png':'../../../../assets/img/icons/unlocked.png'" alt="Lock" srcset="">
+          <!-- </div> -->
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"
+      [length]="totalSize" [pageIndex]="currentPage" (page)="pageEvent = handlePage($event)">
+    </mat-paginator>
+  </div>
+  </mat-card-content>
+  </mat-card>
+
+  <div style="height:7vh">
+	</div>
+<div class="mat-progress-spinner" *ngIf="(totalSize === 0 && spinnerActive)">
+  <span>
+    <mat-progress-spinner style="margin:auto auto;z-index: 1;" mode="indeterminate" [diameter]="60">
+    </mat-progress-spinner>
+  </span>
+</div>
+<div>
+  <span *ngIf="totalSize === 0 && spinnerActive == false && !SSCC">
+    <div class="text-info text-center">
+      <h4><b>No Users Available</b></h4>
+    </div>
+  </span>
+  <span *ngIf="SSCC">
+    <div *ngIf="totalSize === 0 && beforeSearch && spinnerActive == false" class="text-info text-center">
+      <h4>Search User By UserId or DeviceId</h4>
+    </div>
+    <div *ngIf="totalSize === 0 && afterSearch && spinnerActive == false" class="text-info text-center">
+      <h4>No Users Available</h4>
+    </div>
+  </span>
+</div>

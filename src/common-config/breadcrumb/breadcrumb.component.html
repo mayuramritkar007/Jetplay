@@ -1,0 +1,4 @@
+<span *ngFor="let breadcrumb of (breadcrumbs$ | async)">
+  <a [href]="breadcrumb.url" style="color: gray;text-decoration:none">Pages / {{ breadcrumb.label }}</a>
+  <h6>{{ breadcrumb.label.split('/').slice(-1)[0] }}</h6>
+</span>

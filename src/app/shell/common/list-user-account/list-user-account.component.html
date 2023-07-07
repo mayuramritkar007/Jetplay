@@ -1,0 +1,57 @@
+<mat-card class="pngimg mat-elevation-z8">
+	<h5>Account Management Table</h5>
+</mat-card>
+
+<mat-card style="background-color: whitesmoke;" class="mat-elevation-z8">
+	<mat-card-header style="height:7vh">
+	</mat-card-header>
+	<mat-card-content>
+		<button MatSuffix type="button" mat-raised-button matTooltip="Add New Member" matTooltipPosition='above'
+			color='primary' style="float: right; margin-top: 5px;" (click)="openNewMemberDialog()">
+			New Member</button>
+		<mat-form-field class="col-md-10 col-sm-8 col-7" appearance="outline">
+			<mat-label>Search</mat-label>
+			<input matInput (keyup)="applyFilter($event)" placeholder="Search By UserName">
+		</mat-form-field>
+		<mat-table #table [dataSource]="dataSource" matSort>
+			<ng-container matColumnDef="first_name">
+				<mat-header-cell *matHeaderCellDef mat-sort-header> Username </mat-header-cell>
+				<mat-cell *matCellDef="let row" data-label="first_name" name="Username"> {{row.first_name|titlecase}}
+					{{row.last_name|titlecase}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="mobile_number">
+				<mat-header-cell *matHeaderCellDef mat-sort-header> Mobile Number </mat-header-cell>
+				<mat-cell *matCellDef="let row" data-label="mobile_number" name="Mobile Number">
+					{{row.mobile_number ? row.mobile_number : '-' }}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="status">
+				<mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+				<mat-cell *matCellDef="let row" data-label="status" name="Status">
+					<mat-slide-toggle (change)="changeStatus(row,$event)"
+						[checked]="row.status === 'ACTIVE' ? 'true':'false'">
+					</mat-slide-toggle>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+				<mat-header-cell style="padding-left: 10px" *matHeaderCellDef> Actions </mat-header-cell>
+				<mat-cell *matCellDef="let row" data-label="actions" name="Actions">
+					<mat-icon style="padding-right: 40px" matTooltip="View" matTooltipPosition="left"
+						(click)="openUserAppDialog(row)">
+						visibility</mat-icon>
+				</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</mat-table>
+
+		<mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"
+			[length]="totalSize" [pageIndex]="currentPage" (page)="pageEvent = handlePage($event)">
+		</mat-paginator>
+		
+	</mat-card-content>
+</mat-card>

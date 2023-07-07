@@ -1,0 +1,13 @@
+.example-margin {
+    margin: 0 10px;
+}
+
+.mat-column-action {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.mat-column-valid_till {
+    display: flex !important;
+    justify-content: center !important;
+}

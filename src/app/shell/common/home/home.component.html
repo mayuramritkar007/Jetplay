@@ -1,0 +1,106 @@
+<!-- <div class="flex-container" style="margin:25px;">
+  <div style="flex:100%;" >
+
+    <div *ngIf="user.data.account_holder" class="col-md-12" style="margin-top: 1%">
+      <button style="float:right" mat-raised-button color='accent' (click)="router.navigateByUrl('/gameconfigure')">Add
+        New Game</button>
+      <label class='title' style="margin-top: 10px; font-size: 20px;">Gaming Projects :</label>
+    </div>
+
+    <mat-card style="background-color: black;color:white">
+      <mat-card-header>
+        <mat-card-title>title</mat-card-title>
+        <mat-card-subtitle>subtitle</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button>Ok</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div> -->
+
+
+
+  <!-- <div class="col-md-12 homeMain" style="z-index:-99;">
+    <div *ngIf="user.data.account_holder" class="col-md-12" style="margin-top: 1%">
+      <button style="float:right" mat-raised-button color='accent' (click)="router.navigateByUrl('/gameconfigure')">Add
+        New Game</button>
+      <label class='title' style="margin-top: 10px; font-size: 20px;">Projects:</label>
+    </div>
+    <div #grid *ngIf="app_list" class="col-md" [ngStyle]="getStyle()">
+      <div style="margin: 15px; height: 100%;" *ngFor="let app of app_list; let i = index;">
+        <mat-card style="height: 95%;" class="material-card card-shadow" (click)="(GameDetails(app.id))"
+          [hidden]='!app.created'>
+          
+          <img mat-card-image class="header-image" *ngIf='base_url' src="{{base_url}}{{app.image}}?app={{app.id}}">
+          <mat-card-header>
+            <mat-card-title [ngStyle]="{'font-size': app.name.length > 20 ? '18px' : '20px;'}">{{app.name}}
+            </mat-card-title>
+            <mat-card-subtitle style="margin-bottom: 0px;">
+              {{app.description && app.description.length > 100 ? app.description.slice(0, 100) + '...' : app.description }}
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+
+        <mat-card style="height: 95%;" class="material-card" [hidden]='app.created'>
+          <span class="mat-loading-spinner">
+            <mat-progress-spinner style="margin:auto auto;z-index: 1;" mode="indeterminate" [diameter]="60">
+            </mat-progress-spinner>
+          </span>
+
+          <img mat-card-image class="header-image" *ngIf='base_url' src="{{base_url}}{{app.image}}?app={{app.id}}">
+          <mat-card-header>
+            <mat-card-title>{{app.name}}</mat-card-title>
+            <mat-card-subtitle>{{app.description}}</mat-card-subtitle>
+          </mat-card-header>
+
+        </mat-card>
+      </div>
+    </div>
+  </div>
+ -->
+
+
+ <div class="flex-container" style="margin:25px;">
+  <div style="flex:100%;">
+    <div *ngIf="user.data.account_holder" class="mb-2" style="display: flex;flex-direction:row;justify-content: space-between;align-items: center;">
+      <!-- <label style="font-size: 20px;font-weight: bold;">Projects :</label> -->
+      <label style="font-size: 20px;font-weight: bold;">Gaming House :</label>
+      <button style="float:right" mat-raised-button color='accent' (click)="router.navigateByUrl('/gameconfigure')">Add
+        New Game</button>
+    </div>
+    <div class="row" *ngIf="app_list">
+      <div class="col-md-3 col-sm-4" *ngFor="let app of app_list; let i = index;">
+        <!-- If App Created -->
+        <mat-card style="height: 95%;border-radius: 10px;" class="mat-elevation-z4" (click)="(GameDetails(app.id))"
+        [hidden]='!app.created'>
+          
+          <img mat-card-image class="header-image" *ngIf='base_url' src="{{base_url}}{{app.image}}?app={{app.id}}">
+          <mat-card-title [ngStyle]="{'font-size': app.name.length > 20 ? '18px' : '20px;'}">{{app.name}}
+          </mat-card-title>
+          <mat-card-subtitle >
+            {{app.description && app.description.length > 100 ? app.description.slice(0, 100) + '...' : app.description }}
+          </mat-card-subtitle>
+        </mat-card>
+        <!-- If App Not Created -->
+        <mat-card style="height: 95%;border-radius: 10px;" class="mat-elevation-z4" [hidden]='app.created'>
+          <span class="mat-loading-spinner">
+            <mat-progress-spinner style="margin:auto auto;z-index: 1;" mode="indeterminate" [diameter]="60">
+            </mat-progress-spinner>
+          </span>
+          <img mat-card-image *ngIf='base_url' src="{{base_url}}{{app.image}}?app={{app.id}}">
+          <mat-card-header>
+            <mat-card-title>{{app.name}}</mat-card-title>
+            <mat-card-subtitle>{{app.description}}</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+    </div>
+    
+</div>
+</div>
+
+  

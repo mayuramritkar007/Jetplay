@@ -1,0 +1,64 @@
+<mat-horizontal-stepper>
+    <!-- Game Config Features List  -->
+    <mat-step>
+        <!-- <div style="padding: 0%;" class="col-md-12">
+            <mat-icon matSuffix style="float:right" (click)="close()">cancel</mat-icon>
+        </div> -->
+        <form class="form-inline">
+            <ng-template matStepLabel>Game Config Features</ng-template>
+            <section class="col-md-2" style="padding:5px" *ngFor="let feature of moduleList;">
+                <mat-card class="box_content_color" style="padding:10px">
+                    <mat-checkbox color="primary" (change)="OnChange($event.checked, feature.name, 'html')"
+                        [value]="feature.name"
+                        [checked]="feature.required || feature.required_by_modules || feature.used"
+                        [disabled]="feature.required || feature.required_by_modules">
+                        {{feature.name.replace('_',' ')|titlecase}}
+                    </mat-checkbox>
+                </mat-card>
+                <br>
+            </section>
+            <hr>
+            <mat-card-actions class="col-md-12" style="padding:0%;margin:0%;" *ngIf="energyForm">
+                <button type="button" style="float:right" mat-raised-button color="primary" matStepperNext>Next</button>
+            </mat-card-actions>
+            <mat-card-actions class="col-md-12" style="padding:0%;margin:0%;" *ngIf="!energyForm">
+                <button mat-raised-button style="float:right" color="primary" (click)="gameModuleConfig()"
+                    type="button">Save</button>
+                <button mat-raised-button style="float:right" (click)="close()" color="warn"
+                    type="button">Close</button>
+            </mat-card-actions>
+        </form>
+    </mat-step>
+    <!-- Game Config for Energy if energy selected in module List (Energy Form) -->
+    <mat-step [stepControl]="EnergyFormGroup" *ngIf="energyForm">
+        <form [formGroup]="EnergyFormGroup" class="ui form">
+            <ng-template matStepLabel>Energy Details</ng-template>
+            <mat-card-content>
+                <mat-form-field class="col-md-6">
+                    <input matInput placeholder="Energy per interval" type="number"
+                        formControlName="energy_per_interval" min=0 (blur)="checkEnergy()">
+                </mat-form-field>
+                <mat-form-field class="col-md-6">
+                    <input matInput placeholder="Default Max Energy" type="number" formControlName="default_max_energy"
+                        min=0>
+                </mat-form-field>
+                <mat-form-field class="col-md-6">
+                    <input matInput placeholder="Interval Time (In min)" type="number" formControlName="interval_time"
+                        min=0>
+                </mat-form-field>
+                <mat-radio-group class="col-md-6" formControlName="notify_energy_received">
+                    Energy Notification:
+                    <mat-radio-button matSuffix [value]=true>True</mat-radio-button>&nbsp;&nbsp;
+                    <mat-radio-button matSuffix [value]=false>False</mat-radio-button>
+                </mat-radio-group>
+            </mat-card-content>
+            <hr>
+            <mat-card-actions style="padding:0%;margin:0%;">
+                <button mat-raised-button style="float:right" color="primary" (click)="gameModuleConfig()"
+                    type="button">Save</button>
+                <button mat-raised-button style="float:right" (click)="close()" color="warn"
+                    type="button">Close</button>
+            </mat-card-actions>
+        </form>
+    </mat-step>
+</mat-horizontal-stepper>

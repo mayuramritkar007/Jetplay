@@ -1,0 +1,77 @@
+<div style="min-width:500px;max-width:500px">
+    <div class="col-12 text-center text-info">
+        <mat-label class="text-dark">Game Permission</mat-label>
+        <mat-icon color="warn" (click)="close()" matTooltip="Close Dialog" matTooltipPosition="above"
+            style="float:right;">
+            cancel</mat-icon>
+    </div>
+    <div class="row" style="margin-left: 0px;margin-right: 0px;">
+        <mat-form-field *ngIf="!showEdit" class="col-md-6 col-xs-12" style="padding-left: 0px">
+            <mat-select placeholder="GameList" [(ngModel)]="gameId" name="item">
+                <mat-option *ngFor="let item of AdminGameList" [value]="item.id">
+                    {{item.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button *ngIf="!showEdit" MatSuffix type="button" mat-raised-button matTooltip="Add new game to user game list"
+            matTooltipPosition='above' color='accent'
+            style="float: right;margin-top:15px;margin-bottom:15px;margin-right:10px;" (click)="onSubmit()">
+            Add</button>
+        <button *ngIf="showEdit" (click)="showEdit = !showEdit" MatSuffix type="button" mat-raised-button
+            matTooltip="Edit" matTooltipPosition='above' color='accent'
+            style="float: right;margin-top:15px;margin-bottom:15px;">
+            Edit</button>
+        <button *ngIf="!showEdit" (click)="showEdit = !showEdit" MatSuffix type="button" mat-raised-button
+            matTooltip="Cancel" matTooltipPosition='above' color='warn'
+            style="float: right;margin-top:15px;margin-bottom:15px;">
+            Cancel</button>
+    </div>
+
+    <span *ngIf="apps_list.length===0">No Game Permission</span>
+
+    <mat-table *ngIf="apps_list.length!==0" [dataSource]="dataSourceGameApp">
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> GameName </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="name" name="Game Name">
+                {{row.name}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="description" name="Description">
+                {{row.description ? row.description : '-' }}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell style="padding-left: 10px" *matHeaderCellDef> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="actions" name="Actions">
+                <mat-icon [ngStyle]="{'cursor': showEdit == true ? 'not-allowed' : 'pointer' }"
+                    style="padding-right: 40px" matTooltip="Remove Game permission From User" matTooltipPosition="left"
+                    color="warn" (click)="deleteGame(row.id)">
+                    remove_circle</mat-icon>
+                <!-- <mat-icon style="padding-right: 40px" matTooltip="Edit" matTooltipPosition="above">edit</mat-icon> -->
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="module_per">
+            <mat-header-cell style="padding-left: 10px" *matHeaderCellDef> Module Permission </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="actions" name="Module Permission">
+                <!-- [ngStyle]="{'cursor': showEdit == true ? 'not-allowed' : 'pointer' }"
+                 -->
+                <mat-icon style="padding-right: 40px" matTooltip="Modulewise Game permission For User"
+                    matTooltipPosition="left" (click)="GamePermissionDialog(row)">
+                    edit</mat-icon>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+    </mat-table>
+
+    <!-- <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"
+    [length]="totalSize" [pageIndex]="currentPage" (page)="handlePage($event)">
+</mat-paginator> -->
+</div>

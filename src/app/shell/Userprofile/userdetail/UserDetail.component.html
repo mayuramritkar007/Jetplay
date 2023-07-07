@@ -1,0 +1,319 @@
+<mat-card style="padding-top: 0px;">
+
+  <mat-card-content *ngIf="userDetails">
+    <mat-tab-group selectedIndex="selected.value" (selectedTabChange)="onTabChanged($event)"
+      (selectedIndexChange)="selected.setValue($event)">
+      <mat-tab class="materialTab" *ngFor="let tab of tabs;let index = index" [label]="tab | titlecase">
+
+        <!-- Profile -->
+        <span *ngIf="tab === 'profile'">
+          <div #grid class="col-md-12" [ngStyle]="getStyle()">
+            <mat-card class="disabled_color user-card" *ngFor="let category of category_list|keyvalue"
+              style="margin:2%">
+              <mat-card-header class="materialTabCardHeader">
+                <mat-card-title style='margin: 5px;'>{{category.key.replace(category.key[0],'')|titlecase}}
+                </mat-card-title>
+              </mat-card-header>
+              <br />
+              <mat-card-content *ngFor="let obj of category.value">
+                <span
+                  *ngIf="obj.key!=='joined date' && obj.key!=='recent login' && obj.key!=='is blocked' && obj.key!=='is deleted' ">
+                  <mat-form-field class="col-md-12">
+                    <input disabled="true" matInput placeholder="{{obj.key | titlecase}}" value="{{obj.value}}">
+                  </mat-form-field>
+                </span>
+                <span *ngIf="obj.key==='is blocked' || obj.key==='is deleted'">
+                  <!-- <mat-form-field class="col-md-12">
+                    <input disabled="true" matInput placeholder="{{obj.key | titlecase}}"
+                      value="{{obj.value | date : 'dd-MMM-yyyy'}}" style="color: black;">
+                  </mat-form-field> -->
+                  <mat-label>{{obj.key | titlecase}}</mat-label>
+                  <br />
+                  <mat-slide-toggle (change)=blockDelUser($event,obj.key) color="accent" [checked]="obj.value!=='-'">
+                  </mat-slide-toggle>
+                </span>
+                <span *ngIf="obj.key==='joined date'">
+                  <mat-form-field class="col-md-12">
+                    <input disabled="true" matInput placeholder="{{obj.key | titlecase}}"
+                      value="{{obj.value | date : 'dd-MMM-yyyy'}}">
+                  </mat-form-field>
+                </span>
+                <span *ngIf="obj.key==='recent login'">
+                  <mat-form-field class="col-md-12">
+                    <input disabled="true" matInput placeholder="{{obj.key | titlecase}}"
+                      value="{{obj.value | date : 'dd-MMM-yyyy h:mm a'}}">
+                  </mat-form-field>
+                </span>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </span>
+
+        <!-- Scores -->
+        <span *ngIf="tab === 'scores'">
+          <button mat-raised-button style="float:right;" color="accent"
+            (click)="openDialog({},'addScore')">Score</button>
+          <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 break_word inline_block"
+            *ngFor="let userScore of uScore| keyvalue">
+            <mat-card class="disabled_color matCardScoreWallet user-card">
+              <mat-icon matPrefix class="matIconScoreWallet pem-mat-icon" (click)="openDialog(userScore,'score')">edit
+              </mat-icon>
+              <mat-card-header>
+                <mat-card-subtitle>Score Code:<br/><b> {{userScore.key}}</b></mat-card-subtitle>
+                <mat-card-subtitle>Score Value:<b> {{userScore.value}}</b></mat-card-subtitle>
+              </mat-card-header>
+            </mat-card>
+          </div>
+        </span>
+
+        <!-- Wallet -->
+        <span *ngIf="tab === 'wallet'">
+          <button mat-raised-button style="float:right;" color="accent"
+            (click)="openDialog({},'addWallet')">Wallet</button>
+          <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 break_word inline_block"
+            *ngFor="let userWallet of wallet|keyvalue">
+            <mat-card class="disabled_color matCardScoreWallet user-card">
+              <mat-icon matPrefix class="matIconScoreWallet pem-mat-icon" (click)="openDialog(userWallet,'wallet')">edit
+              </mat-icon>
+              <mat-card-header>
+                <mat-card-subtitle>Currency Code:<b> {{userWallet.key}}</b></mat-card-subtitle>
+                <mat-card-subtitle>Currency Value:<b> {{userWallet.value}}</b></mat-card-subtitle>
+              </mat-card-header>
+            </mat-card>
+          </div>
+        </span>
+
+        <!-- Inventory -->
+        <span *ngIf="tab === 'inventory'">
+
+          <div class="col-12">
+            <button mat-raised-button (click)="addUserInventoryDialog('inventory','')" color="accent" type="button">Add
+              Inventory</button>
+
+            <button mat-raised-button (click)=" addUserInventoryDialog('bundle','')" type="button" color="accent">Add
+              Bundle</button>
+          </div>
+
+          <div class="text-center" *ngIf="userInventory===undefined">
+            <h6 style="margin-top:15px">No Inventory for User</h6>
+          </div>
+
+
+          <mat-table *ngIf="userInventory!==undefined" [dataSource]="InventoryDataSource" style="padding:0px;">
+            <ng-container matColumnDef="item_code">
+              <mat-header-cell *matHeaderCellDef> Item </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="item_code" name="Item"> {{row.item_code}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="units">
+              <mat-header-cell *matHeaderCellDef> Units </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="units" name="Units"> {{ row.units }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="level">
+              <mat-header-cell *matHeaderCellDef>Level </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="level" name="Level"> {{ row.level }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="usage_period">
+              <mat-header-cell *matHeaderCellDef>Usage Time </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="usage_period" name="Usage Time">
+                {{ row.usage_period ? (row.usage_period | date:'medium'): '-' }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <mat-header-cell class="pemAction" *matHeaderCellDef>Action </mat-header-cell>
+              <mat-cell class="pemAction" *matCellDef="let row" data-label="action" name="Action">
+                <mat-icon *ngIf="invUserList.includes(row.item_code)" matTooltip="Credit/Debit Units"
+                  matTooltipPosition="left" (click)="addUserInventoryDialog('inventory',row)">edit</mat-icon>
+                <!-- <mat-icon disabled *ngIf="invUserList.includes(row.item_code)" matTooltip="Credit Units"
+                  matTooltipPosition="left" (click)="creditDebitUnits(row,'credit')">
+                  add_circle
+                </mat-icon>
+                <mat-icon *ngIf="invUserList.includes(row.item_code)" matTooltip="Debit Units"
+                  matTooltipPosition="right" (click)="creditDebitUnits(row,'debit')">
+                  remove_circle
+                </mat-icon> -->
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="InventoryDisplayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: InventoryDisplayedColumns;">
+            </mat-row>
+          </mat-table>
+          <mat-paginator *ngIf="userInventory!==undefined" #Invpaginator [showFirstLastButtons]="true"
+            [pageSizeOptions]="[5, 10, 20]" [length]="totalInventorySize" [pageIndex]="currentInvPage"
+            [pageSize]="pageInvSize">
+          </mat-paginator>
+        </span>
+
+        <!-- Tab for user inbox Messages  -->
+        <span *ngIf="tab === 'inbox'">
+
+          <div [hidden]="userList">
+            <div class="col-12">
+              <button mat-raised-button (click)="viewUserCreateMessage()" type="button" color="accent">New
+                Message
+              </button>
+            </div>
+            <!-- <mat-form-field class="col-md-10">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search(Title)">
+            </mat-form-field> -->
+            <div class="text-center" *ngIf="totalInboxSize == 0">
+              <h6 style="margin-top:15px;">No Message for user</h6>
+            </div>
+
+            <mat-table *ngIf="totalInboxSize != 0" [dataSource]="dataInboxSource" style="padding:0px;">
+
+              <ng-container matColumnDef="title">
+                <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="title" name="Title"> {{row['content'].title|titlecase}}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="message_type">
+                <mat-header-cell *matHeaderCellDef> Message Type </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="message_type" name="Message Type"> {{ messages[row.message_type]|titlecase
+                  }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="is_claimed">
+                <mat-header-cell *matHeaderCellDef>Is Claimed </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="is_claimed" name="Is Claimed"> {{ row.is_claimed }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="is_read">
+                <mat-header-cell *matHeaderCellDef>Is Read </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="is_read" name="Is Read"> {{ row.is_read }} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="expiration_time">
+                <mat-header-cell *matHeaderCellDef> Expiration Time
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="expiration_time" name="Expiration Time">
+                  <span *ngIf="row.expiration_time">{{ row.expiration_time | date:'medium'}}</span>
+                  <span *ngIf="!row.expiration_time">-</span>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <mat-header-cell class="pemAction" style="padding-left: 40px" *matHeaderCellDef> Action
+                </mat-header-cell>
+                <mat-cell class="pemAction" *matCellDef="let row" data-label="action" name="Action">
+                  <mat-icon style="padding-right: 40px" matTooltip="View" (click)="openUserInboxDialog(row)"
+                    matTooltipPosition='left'>visibility</mat-icon>
+                  <mat-icon style="padding-right: 40px" matTooltip="Archive"
+                    (click)="deleteUserInboxMessage(row.id,'Archive')" matTooltipPosition='above'>archive</mat-icon>
+                  <mat-icon style="padding-right: 40px" (click)="deleteUserInboxMessage(row.id,'Delete')"
+                    matTooltip="Delete" matTooltipPosition='right'>delete</mat-icon>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;">
+              </mat-row>
+            </mat-table>
+
+            <mat-paginator *ngIf="totalInboxSize != 0" #Inboxpaginator [pageSize]="pageInboxSize"
+              [pageIndex]="currentInboxPage" [length]="totalInboxSize" [pageSizeOptions]="[5, 10, 20]"
+              [showFirstLastButtons]="true" (page)="pageEvent = handlePage($event)">
+            </mat-paginator>
+          </div>
+          <div [hidden]="userForm">
+
+            <button matPrefix mat-raised-button (click)="viewUserInboxMessage()" type="button" color="warn">Back
+            </button>
+            <app-createMessageInbox (msgSendEvent)=viewUserInboxMessage()></app-createMessageInbox>
+
+          </div>
+        </span>
+
+        <span *ngIf="tab === 'social' && SocialFriendDataSource">
+          <mat-tab-group>
+            <mat-tab class="materialTab" *ngFor="let social of SocialFriendDataSource|keyvalue"
+              [label]="social.key.split('_').join(' ')|titlecase">
+
+              <div class="text-center" *ngIf="SocialFriendDataSource[social.key].data.length === 0">
+                <br />
+                <br />
+                <h6>No {{social.key.split('_').join(' ')|titlecase}} for User.</h6>
+              </div>
+              <span *ngIf="SocialFriendDataSource[social.key].data.length !== 0">
+                <mat-table [dataSource]="SocialFriendDataSource[social.key]" style="padding:0px;">
+                  <ng-container [matColumnDef]="item" *ngFor="let item of SocialFriendDisplayedColumns">
+                    <mat-header-cell *matHeaderCellDef> {{item.split('_').join(' ')|titlecase}}
+                    </mat-header-cell>
+                    <mat-cell [ngStyle]="{'cursor': item === 'id' ? 'pointer' : ''}"
+                      [routerLink]="item==='id' ? ['/userprofile/viewuser', row.id] : ['/userprofile/viewuser', user_id] "
+                      *matCellDef="let row">
+                      {{row[item]===null?'-':row[item]}} </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="SocialFriendDisplayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: SocialFriendDisplayedColumns;">
+                  </mat-row>
+                </mat-table>
+
+                <mat-paginator #Socialpaginator [pageSizeOptions]="[5, 10, 20]" [length]="totalSocialSize"
+                  [pageIndex]="currentSocialPage" [pageSize]="pageSocialSize">
+                </mat-paginator>
+              </span>
+            </mat-tab>
+          </mat-tab-group>
+        </span>
+
+        <span *ngIf="tab==='storage'">
+          <div *ngIf="StorageDataSource.data.length === 0" style="margin-top:10px"
+            class="col-12 text-center text-danger">No Storage Data</div>
+          <span *ngIf="StorageDataSource.data.length !== 0">
+            <mat-table [dataSource]="StorageDataSource" style="padding:0px;">
+              <ng-container matColumnDef="key">
+                <mat-header-cell *matHeaderCellDef>Key </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="key" name="Key"> {{ row.key }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="version">
+                <mat-header-cell *matHeaderCellDef>Version </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="version" name="Version"> {{ row.version }} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="last_modified">
+                <mat-header-cell *matHeaderCellDef>Last Modified
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="last_modified" name="Last Modified">
+                  <!-- <span *ngIf="row.last_modified">{{ row.last_modified | date:'medium'}}</span> -->
+                  <span *ngIf="row.last_modified">{{ row.last_modified }}</span>
+                  <span *ngIf="!row.last_modified">-</span>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <mat-header-cell *matHeaderCellDef> Action
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="action" name="Action">
+                  <mat-icon matTooltip="View" (click)="openStorageDialog(row.value,row.key)" matTooltipPosition='right'>
+                    visibility</mat-icon>
+                </mat-cell>
+              </ng-container>
+
+
+              <mat-header-row *matHeaderRowDef="StorageDisplayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: StorageDisplayedColumns;">
+              </mat-row>
+            </mat-table>
+
+            <mat-paginator #Storagepaginator [pageSizeOptions]="[5, 10, 20]" [length]="totalStorageSize"
+              [pageIndex]="currentStoragePage" [pageSize]="pageStorageSize">
+            </mat-paginator>
+          </span>
+        </span>
+
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

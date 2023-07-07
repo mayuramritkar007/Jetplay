@@ -1,0 +1,40 @@
+<h2 *ngIf="!editUserInv" mat-dialog-title class="text-center text-info">Add Inventory</h2>
+<h2 *ngIf="editUserInv" mat-dialog-title class="text-center text-info">{{item_list[0]|titlecase}} Inventory</h2>
+<mat-dialog-content style="min-width: 325px;">
+    <form [formGroup]="userInvForm" (ngSubmit)="onSubmit('update',userInvForm.value)">
+        <!-- <mat-form-field>
+            <mat-select formControlName="inventory_id" placeholder="Select Inventory Category">
+                <mat-option (onSelectionChange)="inventoryDetails(inventory_list.item_code,$event)"
+                    *ngFor="let inventory_list of globalInvList" [value]="inventory_list.id">{{inventory_list.item_code
+                    | titlecase}}</mat-option>
+            </mat-select>
+        </mat-form-field> -->
+        <mat-form-field *ngIf="!editUserInv" class="col-md-12">
+            <input type="text" formControlName="inventory_id" placeholder="Select Inventory Category" matInput
+                style="text-transform: uppercase" (keyup)="filterList($event.target.value)" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option (onSelectionChange)="inventoryDetails(item,$event)" *ngFor="let item of item_list"
+                    [value]="item">
+                    {{item}}</mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="col-md-12">
+            <input type="number" matInput name="current_units" placeholder="Current Units"
+                formControlName="current_units">
+        </mat-form-field>
+        <br>
+        <mat-form-field class="col-md-12">
+            <input type="number" (keyup)="changeFinalValue()" matInput name="difference"
+                placeholder="Increment/Decrement Units" formControlName="difference">
+        </mat-form-field>
+        <br>
+        <mat-form-field class="col-md-12">
+            <input type="number" (keyup)="changeDifference()" matInput name="final_units" placeholder="Final Units"
+                formControlName="final_units">
+        </mat-form-field>
+        <br>
+        <button mat-raised-button style="float: right" color="accent" type="submit">Credit</button>
+        <button mat-raised-button style="float: left" color="warn" (click)="close()" type="button">Close</button>
+    </form>
+</mat-dialog-content>

@@ -1,0 +1,74 @@
+<h2 mat-dialog-title class="text-center text-info">Inbox Details</h2>
+<mat-dialog-content>
+  <div *ngIf="userInboxObject">
+    <mat-card class="text-justify" style="padding: 0px;">
+      <mat-card-content>
+        <div class="container">
+          <div class="table-responsive">
+            <table class="table" [hidden]="inboxDetail">
+              <tbody>
+                <!-- <tr>
+                  <td>Message Id:</td>
+                  <td colspan="2">{{ userInboxObject['id'] }}</td>
+                </tr> -->
+                <tr>
+                  <td>Title:</td>
+                  <td colspan="2">{{ userInboxObject['content'].title | titlecase }}</td>
+                  <td class="text-info text-right" (click)="showAttrib()" style="cursor: pointer;">View Attrib</td>
+                </tr>
+                <tr>
+                  <td>Body:</td>
+                  <td colspan="3">{{ userInboxObject['content'].body }}</td>
+                </tr>
+                <tr>
+                  <td>Created At:</td>
+                  <td>{{ userInboxObject['created_at']? (userInboxObject['created_at'] | date:'medium'):'-' }}</td>
+                  <td>Expiration Time:</td>
+                  <td>
+                    {{ userInboxObject['expiration_time'] ? (userInboxObject['expiration_time'] | date:'medium' ):'-' }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Reference Id:</td>
+                  <td>{{ userInboxObject['content'].reference_id ? userInboxObject['content'].reference_id : "-" }}</td>
+                  <td>Message Type:</td>
+                  <td>
+                    {{messages[userInboxObject['message_type']] | titlecase}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Is Claimed:</td>
+                  <td>{{ userInboxObject['is_claimed'] | titlecase}}</td>
+                  <td>Is Read:</td>
+                  <td>{{ userInboxObject['is_read'] | titlecase }}</td>
+                </tr>
+                <tr>
+                  <td>Is Deleted:</td>
+                  <td>{{ userInboxObject['is_deleted'] | titlecase}}</td>
+                  <td>Priority:</td>
+                  <td>{{ userInboxObject['priority'] }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table" [hidden]="inboxAttrib">
+              <thead>
+                <tr>
+                  <th>Inbox Attrib</th>
+                  <td class="text-info" (click)="showDetail()" style="cursor: pointer;">Back</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <pre><td>{{ userInboxObject['content'].attrib | json }}</td></pre>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</mat-dialog-content>
+<div style="float:right;">
+  <button mat-raised-button (click)="close()" color="warn" type="button">Close</button>
+</div>
